@@ -1,0 +1,58 @@
+import sqlite3
+from menus import menuGrafico
+
+connect = sqlite3.connect("financeiro.db")
+cursor = connect.cursor()
+#======================
+#FUNÇÕES MENU PRINCIPAL
+#======================
+
+def registroDeEntrada():
+    print('='*33)
+    print(f'{' Registro de Entrada ':=^33.33}')
+    print('='*33)
+    entrada = float(input('Digite o valor a ser registrado: '))
+    origem = input('Digite a origem do valor [Salario/FreeLancer/Extra/etc...]: ')
+    print('='*33)
+    print('Digite a data de hoje.')
+    dia = int(input('Dia: '))
+    mes = int(input('Mês: '))
+    ano = int(input('Ano: '))
+
+    if entrada > 0:
+        cursor.execute(f"""INSERT INTO registro_entrada (valor , origem, data) VALUES 
+                        ({entrada}, "{origem}", "{ano}-{mes}-{dia}")
+                        """)
+
+        print('Entrada Registrada.')
+
+    else: 
+        print('Não foi possivel realizar o registro')
+
+
+def registroDeSaida():
+    print('='*33)
+    print(f'{' Registro de Saida ':=^33.33}')
+    print('='*33)
+    entrada = float(input('Digite o valor a ser registrado: '))
+    origem = input('Digite a origem da saida/gasto: ')
+    print('='*33)
+    print('Digite a data de hoje.')
+    dia = int(input('Dia: '))
+    mes = int(input('Mês: '))
+    ano = int(input('Ano: '))
+
+    if entrada > 0:
+        cursor.execute(f"""INSERT INTO registro_saida (valor , origem, data) VALUES 
+                        ({entrada}, "{origem}", "{ano}-{mes}-{dia}")
+                        """)
+
+        print('Saida Registrada.')
+
+    else: 
+        print('Não foi possivel realizar o registro')
+
+
+def registros():
+    menuGrafico()
+    função = int(input('Digite a função que deseja usar: '))
