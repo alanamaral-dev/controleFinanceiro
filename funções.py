@@ -3,6 +3,8 @@ from menus import menuGrafico
 
 connect = sqlite3.connect("financeiro.db")
 cursor = connect.cursor()
+conexao.row_factory = sqlite3.Row
+dados = cursor.fetchall()
 #======================
 #FUNÇÕES MENU PRINCIPAL
 #======================
@@ -56,3 +58,17 @@ def registroDeSaida():
 def registros():
     menuGrafico()
     função = int(input('Digite a função que deseja usar: '))
+
+    if função == 1:
+        cursor.execute("""SELECT * FROM registro_entrada""")
+
+        print(f'|ID{'':.>5.5}|{'VALOR':.>10.10}|{'ORIGEM':.>15.15}|{'DATA':.>10.10}|')
+
+        for registro in dados:
+            print(f'|{registro['id']:.>5.5}|{registro['valor']:.>10.10}|{registro['origem']:.>15.15}|{registro['data']:.>10.10}|')
+            
+            
+
+
+    elif função == 2:
+        cursor.execute("""SELECT * FROM registro_saida""")
