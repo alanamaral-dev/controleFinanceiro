@@ -1,15 +1,19 @@
 import sqlite3
 from menus import menuGrafico
+from dados import saldo, salvar_saldo
 
 connect = sqlite3.connect("financeiro.db")
 cursor = connect.cursor()
-conexao.row_factory = sqlite3.Row
+connect.row_factory = sqlite3.Row
 dados = cursor.fetchall()
 #======================
 #FUNÇÕES MENU PRINCIPAL
 #======================
 
 def registroDeEntrada():
+
+    global saldo
+
     print('='*33)
     print(f'{' Registro de Entrada ':=^33.33}')
     print('='*33)
@@ -26,13 +30,20 @@ def registroDeEntrada():
                         ({entrada}, "{origem}", "{ano}-{mes}-{dia}")
                         """)
 
-        print('Entrada Registrada.')
+        print('\033[32m[Entrada Registrada.]\033[0m')
+        connect.commit()
+        saldo += entrada
+
+        salvar_saldo(saldo)
 
     else: 
-        print('Não foi possivel realizar o registro')
+        print('\033[31mNão foi possivel realizar o registro\033[0m')
 
 
 def registroDeSaida():
+
+    global saldo
+
     print('='*33)
     print(f'{' Registro de Saida ':=^33.33}')
     print('='*33)
@@ -49,10 +60,14 @@ def registroDeSaida():
                         ({entrada}, "{origem}", "{ano}-{mes}-{dia}")
                         """)
 
-        print('Saida Registrada.')
+        print('\033[32m[Saida Registrada.]\033[0m')
+        connect.commit()
+        saldo -= entrada
+
+        salvar_saldo(saldo)
 
     else: 
-        print('Não foi possivel realizar o registro')
+        print('\033[31mNão foi possivel realizar o registro\033[0m')
 
 
 def registros():
@@ -61,14 +76,31 @@ def registros():
 
     if função == 1:
         cursor.execute("""SELECT * FROM registro_entrada""")
+        dados = cursor.fetchall()
 
-        print(f'|ID{'':.>5.5}|{'VALOR':.>10.10}|{'ORIGEM':.>15.15}|{'DATA':.>10.10}|')
+        print('='*47)
+        print(f'{' Registros De Entrada ':-^47}')
+        print('='*47)
+        print(f'+-------+----------+---------------+----------+')
+        print(f'|{'ID':.>7.7}|{'VALOR':.>10.10}|{'ORIGEM':.>15.15}|{'DATA':.>10.10}|')
+        print(f'+-------+----------+---------------+----------+')
 
-        for registro in dados:
-            print(f'|{registro['id']:.>5.5}|{registro['valor']:.>10.10}|{registro['origem']:.>15.15}|{registro['data']:.>10.10}|')
-            
-            
+        for i in range(len(dados)):
+            print(f'|{dados[i][i]:.>7}|{dados[i][i+1]:.>10}|{dados[i][i+2]:.>15}|{dados[i][i+3]:.>10}|')
+            print(f'+-------+----------+---------------+----------+')
 
 
     elif função == 2:
         cursor.execute("""SELECT * FROM registro_saida""")
+        dados = cursor.fetchall()
+
+        print('='*47)
+        print(f'{' Registros De Saída ':-^47}')
+        print('='*47)
+        print(f'+-------+----------+---------------+----------+')
+        print(f'|{'ID':.>7.7}|{'VALOR':.>10.10}|{'ORIGEM':.>15.15}|{'DATA':.>10.10}|')
+        print(f'+-------+----------+---------------+----------+')
+
+        for i in range(len(dados)):
+            print(f'|{dados[i][i]:.>7}|{dados[i][i+1]:.>10}|{dados[i][i+2]:.>15}|{dados[i][i+3]:.>10}|')
+            print(f'+-------+----------+---------------+----------+')
