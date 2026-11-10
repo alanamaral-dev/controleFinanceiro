@@ -1,4 +1,5 @@
 import sqlite3
+import os
 from menus import menuGrafico
 from dados import saldo, salvar_saldo
 
@@ -6,6 +7,19 @@ connect = sqlite3.connect("financeiro.db")
 cursor = connect.cursor()
 connect.row_factory = sqlite3.Row
 dados = cursor.fetchall()
+
+#===================
+#FUNÇÕES DO TERMINAL
+#===================
+
+def limpar_tela():
+    # os.name vale 'nt' no Windows. Em Linux/Mac vale 'posix'.
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def pausar():
+    input("\nPressione Enter para continuar...")
+
+
 #======================
 #FUNÇÕES MENU PRINCIPAL
 #======================
@@ -75,6 +89,7 @@ def registros():
     função = int(input('Digite a função que deseja usar: '))
 
     if função == 1:
+        limpar_tela()
         cursor.execute("""SELECT * FROM registro_entrada""")
         dados = cursor.fetchall()
 
@@ -91,6 +106,7 @@ def registros():
 
 
     elif função == 2:
+        limpar_tela()
         cursor.execute("""SELECT * FROM registro_saida""")
         dados = cursor.fetchall()
 
