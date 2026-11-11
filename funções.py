@@ -101,7 +101,8 @@ def registros():
         print(f'+-------+----------+---------------+----------+')
 
         for i in range(len(dados)):
-            print(f'|{dados[i][i]:.>7}|{dados[i][i+1]:.>10}|{dados[i][i+2]:.>15}|{dados[i][i+3]:.>10}|')
+            j = 0
+            print(f'|{dados[i][j]:.>7}|{dados[i][j+1]:.>10}|{dados[i][j+2]:.>15}|{dados[i][j+3]:.>10}|')
             print(f'+-------+----------+---------------+----------+')
 
 
@@ -118,5 +119,6 @@ def registros():
         print(f'+-------+----------+---------------+----------+')
 
         for i in range(len(dados)):
-            print(f'|{dados[i][i]:.>7}|{dados[i][i+1]:.>10}|{dados[i][i+2]:.>15}|{dados[i][i+3]:.>10}|')
+            j = 0
+            print(f'|{dados[i][j]:.>7}|{dados[i][j+1]:.>10}|{dados[i][j+2]:.>15}|{dados[i][j+3]:.>10}|')
             print(f'+-------+----------+---------------+----------+')
