@@ -19,7 +19,6 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS registro_saida (
 funcao = -1
 
 while funcao != 0:
-    try:
         limpar_tela()
         menuPrincipal()
         funcao = int(input("Digite a função que deseja utilizar: "))
@@ -45,7 +44,5 @@ while funcao != 0:
             print("[Programa Finalizado!]")
             break
 
-    except:
-        print("\033[31m[Valor digitado invalido]\033[0m")
-        pausar()
+
 
