@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from datetime import date
 from menus import menuGrafico
 from dados import saldo, salvar_saldo
 
@@ -34,14 +35,11 @@ def registroDeEntrada():
     entrada = float(input('Digite o valor a ser registrado: '))
     origem = input('Digite a origem do valor [Salario/FreeLancer/Extra/etc...]: ')
     print('='*33)
-    print('Digite a data de hoje.')
-    dia = int(input('Dia: '))
-    mes = int(input('Mês: '))
-    ano = int(input('Ano: '))
+    hoje = date.today()
 
     if entrada > 0:
         cursor.execute(f"""INSERT INTO registro_entrada (valor , origem, data) VALUES 
-                        ({entrada}, "{origem}", "{ano}-{mes}-{dia}")
+                        ({entrada}, "{origem}", "{hoje.isoformat()}")
                         """)
 
         print('\033[32m[Entrada Registrada.]\033[0m')
@@ -64,14 +62,11 @@ def registroDeSaida():
     entrada = float(input('Digite o valor a ser registrado: '))
     origem = input('Digite a origem da saida/gasto: ')
     print('='*33)
-    print('Digite a data de hoje.')
-    dia = int(input('Dia: '))
-    mes = int(input('Mês: '))
-    ano = int(input('Ano: '))
+    hoje = date.today()
 
     if entrada > 0:
         cursor.execute(f"""INSERT INTO registro_saida (valor , origem, data) VALUES 
-                        ({entrada}, "{origem}", "{ano}-{mes}-{dia}")
+                        ({entrada}, "{origem}", "{hoje.isoformat()}")
                         """)
 
         print('\033[32m[Saida Registrada.]\033[0m')
@@ -86,9 +81,9 @@ def registroDeSaida():
 
 def registros():
     menuGrafico()
-    função = int(input('Digite a função que deseja usar: '))
+    funcao = int(input('Digite a função que deseja usar: '))
 
-    if função == 1:
+    if funcao == 1:
         limpar_tela()
         cursor.execute("""SELECT * FROM registro_entrada""")
         dados = cursor.fetchall()
@@ -106,7 +101,7 @@ def registros():
             print(f'+-------+----------+---------------+----------+')
 
 
-    elif função == 2:
+    elif funcao == 2:
         limpar_tela()
         cursor.execute("""SELECT * FROM registro_saida""")
         dados = cursor.fetchall()
@@ -122,3 +117,35 @@ def registros():
             j = 0
             print(f'|{dados[i][j]:.>7}|{dados[i][j+1]:.>10}|{dados[i][j+2]:.>15}|{dados[i][j+3]:.>10}|')
             print(f'+-------+----------+---------------+----------+')
+
+
+    elif funcao == 3:
+        limpar_tela()
+        print(f'{'=':=^70.70}')
+        print(f'{' Gráfico de entradas e despesas do mês':=^70.70}')
+        print(f'{'=':=^70.70}\n')
+        hoje = date.today()
+        cursor.execute(f"""SELECT SUM(valor) FROM registro_entrada WHERE data <= '{hoje.isoformat()}' and data >= '{hoje.replace(day = 1).isoformat()}'""")
+        totalentrada = cursor.fetchone()[0]
+        valorentrada = totalentrada
+        totalentrada = int(totalentrada / 80)
+        
+
+        print(f'{' ENTRADAS ':.<10.10}[\033[42m{valorentrada: ^{totalentrada}}\033[0m]')
+
+
+        cursor.execute(f"""SELECT SUM(valor) FROM registro_saida WHERE data <= '{hoje.isoformat()}' and data >= '{hoje.replace(day = 1).isoformat()}'""")
+        totalsaida = cursor.fetchone()[0]
+        valorsaida = totalsaida
+        totalsaida = int(totalsaida / 80)
+
+        print(f'{' GASTOS ': <10.10}[\033[41m{valorsaida: ^{totalsaida}}\033[0m]\n')
+
+        print(f'Resumo mensal: ', end='')
+
+        if valorentrada - valorsaida > 0:
+            print(f'R$  [{valorentrada - valorsaida}] --- Profit')
+        else:
+            print(f'R$ [{valorentrada - valorsaida}] --- Deficit')
+
+        print(f'\n{'=':=^70.70}')
